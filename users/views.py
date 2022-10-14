@@ -1,8 +1,9 @@
-from rest_framework.views import APIView, Request, Response, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAdminUser
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView, Request, Response, status
 
 from .permissions import IsAdmOrOwner
 
@@ -14,6 +15,18 @@ from users.models import User
 from .serializers import LoginSerializer, UserSerializer
 
 
+class UserView(APIView, PageNumberPagination):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def get(self, req: Request):
+        users = User.objects.all()
+        paginate = self.paginate_queryset(users, req, view=self)
+        serializer = UserSerializer(paginate, many=True)
+
+        return self.get_paginated_response(serializer.data)
+
+
 class UserRegisterView(APIView):
     def post(self, req: Request) -> Response:
         serializer = UserSerializer(data=req.data)
@@ -21,17 +34,6 @@ class UserRegisterView(APIView):
         serializer.save()
 
         return Response(serializer.data, status.HTTP_201_CREATED)
-
-
-class UserView(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAdminUser]
-
-    def get(self, req: Request) -> Response:
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-
-        return Response(serializer.data)
 
 
 class UserDetailView(APIView):

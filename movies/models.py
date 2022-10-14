@@ -8,5 +8,4 @@ class Movie(models.Model):
     classification = models.PositiveIntegerField()
     synopsis = models.TextField()
 
-    # Relação: Um filme pode ter vários generos, e um genero pode ser de vários filmes.
     genres = models.ManyToManyField("genres.Genre", related_name="movies")

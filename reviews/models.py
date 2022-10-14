@@ -20,8 +20,13 @@ class Review(models.Model):
     )
 
     movie_id = models.ForeignKey(
-        "movies.Movie", on_delete=models.CASCADE, related_name="reviews",
+        "movies.Movie",
+        on_delete=models.CASCADE,
+        related_name="reviews",
     )
     user_id = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="reviews"
     )
+
+    class Meta:
+        unique_together = ["movie_id", "user_id"]

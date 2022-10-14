@@ -33,6 +33,7 @@ class MovieSerializer(serializers.Serializer):
 
                 instance.genres.set(genres_data)
                 continue
+
             setattr(instance, key, value)
 
         instance.save()
