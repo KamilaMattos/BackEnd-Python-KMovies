@@ -1,5 +1,7 @@
 # KMovies
 
+Uma API que gerencia usuários, filmes e reviews; utilizando usuário customizado com base no User Padrão do Django.
+
 # Instruções:
 
 ### Crie o ambiente virtual
